@@ -1,0 +1,6 @@
+packages/frontend/node_modules
+packages/frontend/dist
+packages/backend/obj
+packages/backend/bin
+.env
+.vscode/
