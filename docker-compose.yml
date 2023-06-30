@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+    # ------------------------------------------------------------
+    # PostreSQL - Database
+    # ------------------------------------------------------------
+    db:
+        image: postgres:15-alpine
+        container_name: postgres
+        hostname: ${POSTGRES_HOST}
+        environment:
+            PGDATA: /var/lib/postgresql/data
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        ports:
+            - ${POSTGRES_PORT}:${POSTGRES_PORT}
+        networks:
+            - catmash-network
+        restart: always
+
+    # ------------------------------------------------------------
+    # ASP.NET 7.0 - Backend
+    # ------------------------------------------------------------
+    backend:
+        image: docker.io/library/catmash-backend
+        container_name: backend
+        build:
+            context: packages/backend
+        hostname: backend
+        environment:
+            - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Server=db;Port=5432;Database=catmash;IntegratedSecurity=true;Pooling=true;
+            - ASPNETCORE_URLS=http://+:${BACKEND_PORT}
+        depends_on:
+            - db
+        ports:
+            - ${BACKEND_PORT}:${BACKEND_PORT}
+        networks:
+            - catmash-network
+        restart: unless-stopped
+
+    # ------------------------------------------------------------
+    # ReactJS - Frontend
+    # ------------------------------------------------------------
+    frontend:
+        container_name: frontend
+        build:
+            context: ./packages/frontend
+            dockerfile: Dockerfile
+        environment:
+            PORT: ${FRONTEND_PORT}
+        ports:
+            - ${FRONTEND_PORT}:${FRONTEND_PORT}
+        networks:
+            - catmash-network
+        restart: unless-stopped
+
+volumes:
+    pgdata:
+
+networks:
+    catmash-network:
+        driver: bridge
