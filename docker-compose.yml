@@ -31,7 +31,7 @@ services:
             context: packages/backend
         hostname: backend
         environment:
-            - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Server=db;Port=5432;Database=catmash;IntegratedSecurity=true;Pooling=true;
+            - ConnectionStrings__DefaultConnection=User ID=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Server=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};IntegratedSecurity=true;Pooling=true;
             - ASPNETCORE_URLS=http://+:${BACKEND_PORT}
         depends_on:
             - db
