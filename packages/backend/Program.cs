@@ -13,7 +13,7 @@ public class Program
 
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("_myAllowSpecificOrigins",
+            options.AddPolicy("_localhostAllowOrigin",
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:4000")
@@ -89,7 +89,7 @@ public class Program
             }
         }
 
-        app.UseCors("_myAllowSpecificOrigins");
+        app.UseCors("_localhostAllowOrigin");
         app.UseAuthorization();
         app.MapControllers();
 
