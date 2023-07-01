@@ -60,7 +60,7 @@ public class Program
                     if (response.IsSuccessStatusCode)
                     {
                         string json = await response.Content.ReadAsStringAsync();
-                        CatData catData = JsonConvert.DeserializeObject<CatData>(json);
+                        CatData catData = JsonConvert.DeserializeObject<CatData>(json)!;
 
                         List<ImageData> images = catData.Images;
                         List<Cat> cats = new List<Cat>();
@@ -95,15 +95,4 @@ public class Program
 
         app.Run();
     }
-}
-
-public class CatData
-{
-    public List<ImageData> Images { get; set; }
-}
-
-public class ImageData
-{
-    public string url { get; set; }
-    public string id { get; set; }
 }
